@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Crop Advisor - Features</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2ecc71;
+            --secondary-color: #27ae60;
+            --accent-color: #3498db;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .navbar {
+            background: rgba(44, 62, 80, 0.95) !important;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.9) 0%, rgba(52, 152, 219, 0.9) 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 3rem 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .feature-card h3 {
+            color: var(--dark-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 0.75rem 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(46, 204, 113, 0.25);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #2980b9 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn-outline-light {
+            border-radius: 10px;
+            padding: 0.75rem 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-light:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        .result-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .parameter-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .parameter-item.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .parameter-item.danger {
+            border-left-color: var(--danger-color);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner-border {
+            color: var(--primary-color);
+        }
+
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+
+        .crop-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 1rem;
+        }
+
+        .confidence-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+        }
+
+        .confidence-fill {
+            background: linear-gradient(90deg, var(--success-color), var(--primary-color));
+            height: 100%;
+            transition: width 0.5s ease;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 10px 10px 0 0;
+            color: var(--dark-color);
+            font-weight: 600;
+            padding: 1rem 2rem;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        
+
+        .tab-content {
+            background: white;
+            border-radius: 0 0 15px 15px;
+            padding: 2rem;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 2rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-seedling me-2"></i>
+                Smart Crop Advisor
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="features.html">Features</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1><i class="fas fa-magic me-3"></i>AI-Powered Features</h1>
+            <p>Explore our advanced crop recommendation and soil analysis tools powered by machine learning.</p>
+            <a href="index.html" class="btn btn-outline-light btn-lg">
+                <i class="fas fa-arrow-left me-2"></i>Back to Home
+            </a>
+        </div>
+
+        <!-- Features Section -->
+        <ul class="nav nav-tabs" id="predictionTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="crop-tab" data-bs-toggle="tab" data-bs-target="#crop-prediction" type="button" role="tab">
+                    <i class="fas fa-crop me-2"></i>Crop Prediction
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="soil-tab" data-bs-toggle="tab" data-bs-target="#soil-prediction" type="button" role="tab">
+                    <i class="fas fa-mountain me-2"></i>Soil Parameters
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="disease-tab" data-bs-toggle="tab" data-bs-target="#disease-prediction" type="button" role="tab">
+                    <i class="fas fa-virus me-2"></i>Plant Disease
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="predictionTabContent">
+            <!-- Crop Prediction Tab -->
+            <div class="tab-pane fade show active" id="crop-prediction" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="feature-card">
+                            <h3><i class="fas fa-crop text-success"></i>Crop Recommendation</h3>
+                            <p class="text-muted">Enter your soil parameters to get AI-powered crop recommendations.</p>
+                            
+                            <form id="cropForm">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="nitrogen" class="form-label">Nitrogen (N) mg/kg</label>
+                                        <input type="number" class="form-control" id="nitrogen" required step="0.1">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="phosphorus" class="form-label">Phosphorus (P) mg/kg</label>
+                                        <input type="number" class="form-control" id="phosphorus" required step="0.1">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="potassium" class="form-label">Potassium (K) mg/kg</label>
+                                        <input type="number" class="form-control" id="potassium" required step="0.1">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="temperature" class="form-label">Temperature (°C)</label>
+                                        <input type="number" class="form-control" id="temperature" required step="0.1">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="humidity" class="form-label">Humidity (%)</label>
+                                        <input type="number" class="form-control" id="humidity" required step="0.1">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="ph" class="form-label">pH Level</label>
+                                        <input type="number" class="form-control" id="ph" required step="0.1" min="0" max="14">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="rainfall" class="form-label">Rainfall (mm)</label>
+                                    <input type="number" class="form-control" id="rainfall" required step="0.1">
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-search me-2"></i>Get Crop Recommendation
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div id="cropResult" style="display: none;">
+                            <div class="result-card">
+                                <h4><i class="fas fa-leaf text-success me-2"></i>Recommended Crop</h4>
+                                <div class="d-flex align-items-center mb-3">
+                                    <img id="cropImage" class="crop-image" src="" alt="Crop">
+                                    <div>
+                                        <h5 id="recommendedCrop" class="mb-1"></h5>
+                                        <div class="confidence-bar">
+                                            <div id="confidenceFill" class="confidence-fill"></div>
+                                        </div>
+                                        <small class="text-muted">Confidence: <span id="confidenceText"></span>%</small>
+                                    </div>
+                                </div>
+                                
+                                <div id="soilAnalysis">
+                                    <h6 class="text-muted mb-3">Soil Parameters Analysis</h6>
+                                    <div id="parameterList"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="cropLoading" class="loading">
+                            <div class="spinner-border" role="status"></div>
+                            <p class="mt-2">Analyzing soil parameters...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soil Parameters Tab -->
+            <div class="tab-pane fade" id="soil-prediction" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="feature-card">
+                            <h3><i class="fas fa-mountain text-primary"></i>Soil Parameters</h3>
+                            <p class="text-muted">Select a crop to get optimal soil parameter recommendations.</p>
+                            
+                            <form id="soilForm">
+                                <div class="mb-3">
+                                    <label for="cropSelect" class="form-label">Select Crop</label>
+                                    <select class="form-select" id="cropSelect" required>
+                                        <option value="">Choose a crop...</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-secondary w-100">
+                                    <i class="fas fa-search me-2"></i>Get Soil Parameters
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6">
+                        <div id="soilResult" style="display: none;">
+                            <div class="result-card">
+                                <h4><i class="fas fa-chart-line text-primary me-2"></i>Optimal Soil Parameters</h4>
+                                <h6 class="text-muted mb-3">For: <span id="selectedCrop"></span></h6>
+                                
+                                <div id="soilParameterList"></div>
+                            </div>
+                        </div>
+                        
+                        <div id="soilLoading" class="loading">
+                            <div class="spinner-border" role="status"></div>
+                            <p class="mt-2">Analyzing crop requirements...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <!-- Plant Disease Tab -->
+            <div class="tab-pane fade" id="disease-prediction" role="tabpanel">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="feature-card">
+                            <h3><i class="fas fa-virus text-danger"></i>Plant Disease Prediction</h3>
+                            <p class="text-muted">Upload a leaf image to detect plant disease.</p>
+
+                            <form id="diseaseForm">
+                                <div class="mb-3">
+                                    <label for="diseaseImage" class="form-label">Leaf Image</label>
+                                    <input type="file" class="form-control" id="diseaseImage" accept="image/*" required>
+                                </div>
+                                <div class="mb-3 text-center">
+                                    <img id="diseasePreview" src="" alt="Preview" style="max-width: 100%; max-height: 240px; display: none; border-radius: 10px;" />
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-microscope me-2"></i>Predict Disease
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div id="diseaseResult" style="display: none;">
+                            <div class="result-card">
+                                <h4><i class="fas fa-notes-medical text-danger me-2"></i>Prediction Result</h4>
+                                <div class="d-flex align-items-center mb-3">
+                                    <img id="diseaseResultImage" class="crop-image" src="" alt="Leaf">
+                                    <div>
+                                        <h5 id="diseaseLabel" class="mb-1"></h5>
+                                        <div class="confidence-bar">
+                                            <div id="diseaseConfidenceFill" class="confidence-fill"></div>
+                                        </div>
+                                        <small class="text-muted">Confidence: <span id="diseaseConfidenceText"></span>%</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="diseaseLoading" class="loading">
+                            <div class="spinner-border" role="status"></div>
+                            <p class="mt-2">Analyzing image...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Global variables
+        let availableCrops = [];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAvailableCrops();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Crop prediction form
+            document.getElementById('cropForm').addEventListener('submit', handleCropPrediction);
+            
+            // Soil parameters form
+            document.getElementById('soilForm').addEventListener('submit', handleSoilPrediction);
+
+            // Disease prediction form and image preview
+            const diseaseForm = document.getElementById('diseaseForm');
+            if (diseaseForm) {
+                diseaseForm.addEventListener('submit', handleDiseasePrediction);
+            }
+            const diseaseImageInput = document.getElementById('diseaseImage');
+            if (diseaseImageInput) {
+                diseaseImageInput.addEventListener('change', handleDiseaseImageChange);
+            }
+        }
+
+        function loadAvailableCrops() {
+            fetch('/api/crops')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        availableCrops = data.crops;
+                        populateCropSelect();
+                    } else {
+                        showAlert('Error loading crops: ' + data.error, 'danger');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showAlert('Failed to load available crops', 'danger');
+                });
+        }
+
+
+        // Disease prediction handlers (plain JS)
+        function handleDiseaseImageChange(e) {
+            const input = e.target;
+            if (input && input.files && input.files[0]) {
+                const preview = document.getElementById('diseasePreview');
+                if (preview) {
+                    preview.src = URL.createObjectURL(input.files[0]);
+                    preview.style.display = 'block';
+                }
+            }
+        }
+
+        function handleDiseasePrediction(e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('diseaseImage');
+            if (!fileInput || !fileInput.files || !fileInput.files[0]) {
+                showAlert('Please select an image', 'warning');
+                return;
+            }
+            const formData = new FormData();
+            formData.append('image', fileInput.files[0]);
+
+            showLoading('disease');
+            fetch('/api/disease/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(r => r.json())
+            .then(data => {
+                hideLoading('disease');
+                if (data.success) {
+                    const label = data.pretty_label || data.label || 'Unknown';
+                    const confidence = data.confidence ? (data.confidence * 100).toFixed(1) : '0.0';
+                    const labelEl = document.getElementById('diseaseLabel');
+                    const confTextEl = document.getElementById('diseaseConfidenceText');
+                    const confFillEl = document.getElementById('diseaseConfidenceFill');
+                    if (labelEl) labelEl.textContent = label;
+                    if (confTextEl) confTextEl.textContent = confidence;
+                    if (confFillEl) confFillEl.style.width = confidence + '%';
+                    const preview = document.getElementById('diseasePreview');
+                    const resultImg = document.getElementById('diseaseResultImage');
+                    if (resultImg) {
+                        resultImg.src = (preview && preview.src) ? preview.src : 'python/image1.jpg';
+                    }
+                    const resultDiv = document.getElementById('diseaseResult');
+                    if (resultDiv) {
+                        resultDiv.style.display = 'block';
+                        resultDiv.scrollIntoView({ behavior: 'smooth' });
+                    }
+                } else {
+                    showAlert('Error: ' + (data.error || 'Prediction failed'), 'danger');
+                }
+            })
+            .catch(() => {
+                hideLoading('disease');
+                showAlert('Failed to get disease prediction', 'danger');
+            });
+        }
+
+        function populateCropSelect() {
+            const select = document.getElementById('cropSelect');
+            select.innerHTML = '<option value="">Choose a crop...</option>';
+            
+            availableCrops.forEach(crop => {
+                const option = document.createElement('option');
+                option.value = crop;
+                option.textContent = crop.charAt(0).toUpperCase() + crop.slice(1);
+                select.appendChild(option);
+            });
+        }
+
+        function handleCropPrediction(e) {
+            e.preventDefault();
+            
+            const formData = {
+                nitrogen: parseFloat(document.getElementById('nitrogen').value),
+                phosphorus: parseFloat(document.getElementById('phosphorus').value),
+                potassium: parseFloat(document.getElementById('potassium').value),
+                temperature: parseFloat(document.getElementById('temperature').value),
+                humidity: parseFloat(document.getElementById('humidity').value),
+                ph: parseFloat(document.getElementById('ph').value),
+                rainfall: parseFloat(document.getElementById('rainfall').value)
+            };
+
+            showLoading('crop');
+            
+            fetch('/api/predict-crop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading('crop');
+                if (data.success) {
+                    displayCropResult(data);
+                } else {
+                    showAlert('Error: ' + data.error, 'danger');
+                }
+            })
+            .catch(error => {
+                hideLoading('crop');
+                console.error('Error:', error);
+                showAlert('Failed to get prediction', 'danger');
+            });
+        }
+
+        function handleSoilPrediction(e) {
+            e.preventDefault();
+            
+            const crop = document.getElementById('cropSelect').value;
+            if (!crop) {
+                showAlert('Please select a crop', 'warning');
+                return;
+            }
+
+            showLoading('soil');
+            
+            fetch('/api/predict-soil', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ crop: crop })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading('soil');
+                if (data.success) {
+                    displaySoilResult(data);
+                } else {
+                    showAlert('Error: ' + data.error, 'danger');
+                }
+            })
+            .catch(error => {
+                hideLoading('soil');
+                console.error('Error:', error);
+                showAlert('Failed to get soil parameters', 'danger');
+            });
+        }
+
+        function displayCropResult(data) {
+            const resultDiv = document.getElementById('cropResult');
+            const cropName = data.crop;
+            const confidence = (data.confidence * 100).toFixed(1);
+            
+            // Update crop information
+            document.getElementById('recommendedCrop').textContent = cropName.charAt(0).toUpperCase() + cropName.slice(1);
+            document.getElementById('confidenceText').textContent = confidence;
+            document.getElementById('confidenceFill').style.width = confidence + '%';
+            
+            // Set crop image
+            const cropImage = document.getElementById('cropImage');
+            cropImage.src = `python/${cropName.toLowerCase()}.jpg`;
+            cropImage.onerror = function() {
+                this.src = 'python/image.jpg'; // Default image
+            };
+            
+            // Display soil analysis
+            if (data.soil_recommendations) {
+                displaySoilAnalysis(data.soil_recommendations);
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function displaySoilResult(data) {
+            const resultDiv = document.getElementById('soilResult');
+            const cropName = data.crop;
+            
+            document.getElementById('selectedCrop').textContent = cropName.charAt(0).toUpperCase() + cropName.slice(1);
+            
+            // Display soil parameters
+            const parameterList = document.getElementById('soilParameterList');
+            parameterList.innerHTML = '';
+            
+            Object.entries(data.soil_parameters).forEach(([param, info]) => {
+                const paramDiv = document.createElement('div');
+                paramDiv.className = 'parameter-item';
+                paramDiv.innerHTML = `
+                    <h6 class="mb-2"><i class="fas fa-chart-bar text-primary me-2"></i>${param.toUpperCase()}</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <small class="text-muted">Optimal Range:</small><br>
+                            <strong>${info.optimal_min.toFixed(2)} - ${info.optimal_max.toFixed(2)}</strong>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-muted">Average Value:</small><br>
+                            <strong>${info.mean.toFixed(2)}</strong>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Recommendation:</small><br>
+                        <small>${info.recommendation}</small>
+                    </div>
+                `;
+                parameterList.appendChild(paramDiv);
+            });
+            
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function displaySoilAnalysis(recommendations) {
+            const parameterList = document.getElementById('parameterList');
+            parameterList.innerHTML = '';
+            
+            Object.entries(recommendations).forEach(([param, info]) => {
+                const statusClass = info.status === 'Optimal' ? '' : 
+                                  info.status === 'Low' ? 'warning' : 'danger';
+                
+                const paramDiv = document.createElement('div');
+                paramDiv.className = `parameter-item ${statusClass}`;
+                paramDiv.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0">${param.toUpperCase()}</h6>
+                        <span class="badge ${info.status === 'Optimal' ? 'bg-success' : 
+                                          info.status === 'Low' ? 'bg-warning' : 'bg-danger'}">
+                            ${info.status}
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <small class="text-muted">Current:</small><br>
+                            <strong>${info.current.toFixed(2)}</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">Optimal Range:</small><br>
+                            <strong>${info.optimal_min.toFixed(2)} - ${info.optimal_max.toFixed(2)}</strong>
+                        </div>
+                        <div class="col-md-4">
+                            <small class="text-muted">Mean:</small><br>
+                            <strong>${info.mean.toFixed(2)}</strong>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <small class="text-muted">Recommendation:</small><br>
+                        <small>${info.recommendation}</small>
+                    </div>
+                `;
+                parameterList.appendChild(paramDiv);
+            });
+        }
+
+        function showLoading(type) {
+            document.getElementById(type + 'Loading').style.display = 'block';
+            document.getElementById(type + 'Result').style.display = 'none';
+        }
+
+        function hideLoading(type) {
+            document.getElementById(type + 'Loading').style.display = 'none';
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            const container = document.querySelector('.container');
+            container.insertBefore(alertDiv, container.firstChild);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+
+        
+    </script>
+</body>
+</html> 

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crop Recommendation Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #1e5a3a 0%, #277549 100%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .navbar-brand {
+            font-weight: 600;
+            color: white !important;
+        }
+        .container {
+            max-width: 800px;
+            margin-top: 2rem;
+        }
+        .result-section {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(39, 117, 73, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .result-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #277549, #2ecc71);
+            opacity: 0.8;
+        }
+        .result-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7f4 100%);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 1px solid rgba(39, 117, 73, 0.2);
+        }
+        .crop-image {
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        .crop-name {
+            color: #277549;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+        .confidence-badge {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 1rem 0;
+            box-shadow: 0 2px 4px rgba(46, 204, 113, 0.3);
+            font-size: 1.2rem;
+        }
+        .result-content {
+            text-align: center;
+            padding: 2rem;
+        }
+        .crop-info {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(39, 117, 73, 0.05);
+            border-radius: 10px;
+        }
+        .crop-info h5 {
+            color: #277549;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .crop-info p {
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        .parameter-list {
+            background: rgba(39, 117, 73, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .parameter-list h5 {
+            color: #277549;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        .parameter-list h5::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 35%;
+            width: 160px;
+            height: 3px;
+            background: linear-gradient(90deg, #277549, #2ecc71);
+            border-radius: 2px;
+        }
+        .parameter-list ul li {
+            color: #2c3e50;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(39, 117, 73, 0.1);
+        }
+        .parameter-list ul li:last-child {
+            border-bottom: none;
+        }
+        .parameter-list ul li strong {
+            color: #277549;
+            font-weight: 600;
+        }
+        .btn-back {
+            background: linear-gradient(135deg, #277549 0%, #1e5a3a 100%);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(39, 117, 73, 0.3);
+            color: white;
+        }
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        .spinner-border {
+            color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-leaf me-2"></i>
+                Crop Recommendation System
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="result-section">
+            <div id="resultCard" class="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mb-4">
+            <a href="index.html" class="btn btn-back">
+                <i class="fas fa-arrow-left me-2"></i>Back
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            const resultCard = document.getElementById('resultCard');
+            
+            // Get form data from sessionStorage
+            const formData = JSON.parse(sessionStorage.getItem('cropFormData'));
+            
+            if (!formData) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+
+                if (data.success) {
+                    const prediction = data.crop;
+                    const confidence = data.confidence;
+                    const confidencePercentage = (confidence * 100).toFixed(2);
+                    
+                    // Get image path based on crop name
+                    const imagePath = `python/${prediction.toLowerCase().replace(/\s+/g, '_')}.jpg`;
+                    
+                    resultCard.innerHTML = `
+                        <div class="result-card">
+                            <div class="result-content">
+                                <img src="${imagePath}" alt="${prediction}" class="crop-image" onerror="this.src='python/default_crop.jpg'">
+                                <h3 class="crop-name">${prediction}</h3>
+                                <div class="confidence-badge">
+                                    Confidence: ${confidencePercentage}%
+                                </div>
+                                <div class="crop-info">
+                                    <h5>About ${prediction}</h5>
+                                    <p>Based on your soil parameters, ${prediction} is the most suitable crop for your conditions. The model is ${confidencePercentage}% confident in this recommendation.</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    resultCard.innerHTML = `
+                        <div class="alert alert-danger">
+                            <h5 class="alert-heading">Error</h5>
+                            <p class="mb-0">${data.error || 'Failed to get prediction'}</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                resultCard.innerHTML = `
+                    <div class="alert alert-danger">
+                        <h5 class="alert-heading">Connection Error</h5>
+                        <p class="mb-0">Failed to connect to the prediction service. Please make sure:</p>
+                        <ul class="mb-0">
+                            <li>The Flask server is running (python app.py)</li>
+                            <li>You're using the correct URL (http://127.0.0.1:5000)</li>
+                            <li>There are no firewall issues blocking the connection</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        });
+    </script>
+</body>
+</html> 
