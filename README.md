@@ -180,4 +180,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Dataset: Crop recommendation dataset
 - Icons: Font Awesome
 - UI Framework: Bootstrap
+
 - ML Library: scikit-learn 
